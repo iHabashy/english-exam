@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Level Assessment Exam</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:    #1a2744;
+    --ink:     #1e1e2e;
+    --slate:   #4a5568;
+    --mist:    #f0f4fb;
+    --white:   #ffffff;
+    --gold:    #c9963a;
+    --gold-lt: #fdf3e3;
+    --green:   #2d7a4f;
+    --green-lt:#e8f5ee;
+    --red:     #b93333;
+    --red-lt:  #fceaea;
+    --border:  #dce3ef;
+    --radius:  10px;
+    --shadow:  0 2px 12px rgba(26,39,68,0.08);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #eef2f9;
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 0 0 80px;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: var(--navy);
+    color: var(--white);
+    padding: 48px 24px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 40px,
+      rgba(255,255,255,0.02) 40px,
+      rgba(255,255,255,0.02) 80px
+    );
+  }
+  .header-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+    position: relative;
+  }
+  .header-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(28px, 5vw, 48px);
+    line-height: 1.15;
+    color: var(--white);
+    position: relative;
+    margin-bottom: 16px;
+  }
+  .header-sub {
+    font-size: 14px;
+    color: rgba(255,255,255,0.55);
+    position: relative;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress-wrap {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .progress-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--slate);
+    white-space: nowrap;
+    min-width: 110px;
+  }
+  .progress-track {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--navy), var(--gold));
+    border-radius: 99px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  .progress-pct {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--navy);
+    min-width: 36px;
+    text-align: right;
+  }
+
+  /* ── LAYOUT ── */
+  .exam-body {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 36px 20px 0;
+  }
+
+  /* ── PART HEADER ── */
+  .part-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 48px 0 24px;
+  }
+  .part-header:first-of-type { margin-top: 0; }
+  .part-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: var(--navy);
+    color: var(--white);
+    padding: 6px 14px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .part-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--navy);
+  }
+  .part-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 26px 28px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+    transition: border-color 0.2s;
+  }
+  .q-card.answered { border-color: #b8c8e8; }
+  .q-card.correct  { border-color: var(--green); background: var(--green-lt); }
+  .q-card.wrong    { border-color: var(--red);   background: var(--red-lt); }
+
+  .q-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--gold);
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .q-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+  .q-sentence {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--slate);
+    margin: 10px 0 16px;
+    padding: 10px 16px;
+    border-left: 3px solid var(--gold);
+    background: var(--gold-lt);
+    border-radius: 0 6px 6px 0;
+  }
+
+  /* ── PASSAGE ── */
+  .passage-box {
+    background: var(--mist);
+    border: 1.5px solid var(--border);
+    border-left: 4px solid var(--navy);
+    border-radius: 8px;
+    padding: 20px 22px;
+    font-size: 14.5px;
+    line-height: 1.75;
+    color: var(--ink);
+    margin-bottom: 28px;
+  }
+  .passage-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--navy);
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  /* ── OPTIONS ── */
+  .options { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 11px 15px;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--white);
+    user-select: none;
+  }
+  .option:hover { border-color: var(--navy); background: var(--mist); }
+  .option input[type="radio"] { display: none; }
+  .option-dot {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .option-dot::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--white);
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .option.selected .option-dot {
+    border-color: var(--navy);
+    background: var(--navy);
+  }
+  .option.selected .option-dot::after { opacity: 1; }
+  .option.selected { border-color: var(--navy); background: var(--mist); }
+
+  /* post-submit states */
+  .option.correct-answer {
+    border-color: var(--green) !important;
+    background: var(--green-lt) !important;
+  }
+  .option.correct-answer .option-dot {
+    border-color: var(--green);
+    background: var(--green);
+  }
+  .option.wrong-answer {
+    border-color: var(--red) !important;
+    background: var(--red-lt) !important;
+  }
+  .option.wrong-answer .option-dot {
+    border-color: var(--red);
+    background: var(--red);
+  }
+  .option-letter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--slate);
+    min-width: 20px;
+    padding-top: 1px;
+  }
+  .option-text { font-size: 14px; color: var(--ink); line-height: 1.45; }
+
+  /* ── FEEDBACK CHIP ── */
+  .q-feedback {
+    display: none;
+    margin-top: 12px;
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 6px;
+    line-height: 1.5;
+  }
+  .q-feedback.show { display: block; }
+  .q-feedback.ok  { background: var(--green-lt); color: var(--green); border: 1px solid #a8d5b9; }
+  .q-feedback.bad { background: var(--red-lt);   color: var(--red);   border: 1px solid #f0b8b8; }
+
+  /* ── TEXTAREA ── */
+  .q-textarea {
+    width: 100%;
+    margin-top: 14px;
+    padding: 12px 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    background: var(--mist);
+    resize: vertical;
+    min-height: 90px;
+    transition: border-color 0.15s;
+    line-height: 1.6;
+  }
+  .q-textarea:focus {
+    outline: none;
+    border-color: var(--navy);
+    background: var(--white);
+  }
+  .textarea-note {
+    font-size: 11.5px;
+    color: var(--slate);
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  /* ── SUBMIT BTN ── */
+  .submit-wrap {
+    text-align: center;
+    margin: 44px 0 20px;
+  }
+  .btn-submit {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 16px 52px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: background 0.2s, transform 0.1s;
+    box-shadow: 0 4px 18px rgba(26,39,68,0.22);
+  }
+  .btn-submit:hover  { background: #243660; }
+  .btn-submit:active { transform: scale(0.98); }
+  .btn-submit:disabled { background: #aaa; cursor: not-allowed; box-shadow: none; }
+
+  /* ── SCORE PANEL ── */
+  #score-panel {
+    display: none;
+    max-width: 780px;
+    margin: 36px auto 0;
+    padding: 0 20px;
+  }
+  .score-card {
+    background: var(--navy);
+    color: var(--white);
+    border-radius: 14px;
+    padding: 36px 36px 28px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(26,39,68,0.22);
+    margin-bottom: 24px;
+  }
+  .score-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+  }
+  .score-big {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(56px, 12vw, 88px);
+    line-height: 1;
+    color: var(--white);
+  }
+  .score-denom {
+    font-size: 22px;
+    color: rgba(255,255,255,0.5);
+    margin-left: 4px;
+  }
+  .score-pct-label {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    margin-top: 8px;
+  }
+  .cefr-badge {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--navy);
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    padding: 8px 28px;
+    border-radius: 6px;
+    margin-top: 22px;
+    font-weight: 400;
+  }
+  .breakdown-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .breakdown-card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    box-shadow: var(--shadow);
+  }
+  .breakdown-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 10px;
+  }
+  .breakdown-bar-track {
+    height: 8px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .breakdown-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--navy), #3a5fad);
+  }
+  .breakdown-pct {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--navy);
+  }
+
+  .insights-card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 24px;
+    box-shadow: var(--shadow);
+    margin-bottom: 14px;
+  }
+  .insights-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 17px;
+    color: var(--navy);
+    margin-bottom: 12px;
+  }
+  .insight-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--slate);
+  }
+  .insight-icon { font-size: 15px; flex-shrink: 0; }
+
+  .open-notice {
+    background: var(--gold-lt);
+    border: 1.5px solid #e8cfa0;
+    border-radius: 10px;
+    padding: 18px 22px;
+    font-size: 13.5px;
+    color: #7a5c1a;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  .open-notice strong { display: block; margin-bottom: 4px; font-size: 14px; color: #5c430f; }
+
+  .btn-retry {
+    display: inline-block;
+    margin-top: 8px;
+    background: transparent;
+    color: var(--navy);
+    border: 2px solid var(--navy);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 11px 34px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-retry:hover { background: var(--navy); color: var(--white); }
+
+  /* ── STUDENT INFO ── */
+  .student-info-card {
+    background: var(--white);
+    border: 2px solid var(--navy);
+    border-radius: var(--radius);
+    padding: 26px 28px;
+    margin-bottom: 32px;
+    box-shadow: var(--shadow);
+  }
+  .student-info-card .q-text { margin-bottom: 16px; font-size: 16px; }
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 520px) { .info-grid { grid-template-columns: 1fr; } }
+  .info-field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 6px;
+  }
+  .info-field input {
+    width: 100%;
+    padding: 11px 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    background: var(--mist);
+    transition: border-color 0.15s;
+  }
+  .info-field input:focus {
+    outline: none;
+    border-color: var(--navy);
+    background: var(--white);
+  }
+
+  /* ── FORMSPREE STATUS ── */
+  .submit-status {
+    margin-top: 14px;
+    font-size: 13.5px;
+    text-align: center;
+    min-height: 22px;
+    color: var(--slate);
+  }
+  .submit-status.sending { color: var(--navy); }
+  .submit-status.sent    { color: var(--green); font-weight: 600; }
+  .submit-status.error   { color: var(--red); }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #c0cce0; border-radius: 99px; }
+
+  @media (max-width: 520px) {
+    .q-card { padding: 20px 18px; }
+    .score-card { padding: 28px 20px 22px; }
+    .part-title { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-label">CEFR Placement Test</div>
+  <h1 class="header-title">English Level Assessment</h1>
+  <p class="header-sub">30 questions &nbsp;·&nbsp; Grammar, Vocabulary, Reading, Writing &nbsp;·&nbsp; Do not look up answers</p>
+</header>
+
+<div class="progress-wrap">
+  <span class="progress-label" id="progress-label">0 of 22 answered</span>
+  <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+  <span class="progress-pct" id="progress-pct">0%</span>
+</div>
+
+<div class="exam-body" id="exam-body">
+
+  <!-- STUDENT INFO -->
+  <div class="student-info-card">
+    <div class="q-text">Before you begin — tell us who you are:</div>
+    <div class="info-grid">
+      <div class="info-field">
+        <label for="student-name">Full Name</label>
+        <input type="text" id="student-name" placeholder="e.g. Ahmed Hassan" autocomplete="name">
+      </div>
+      <div class="info-field">
+        <label for="student-email">Your Email</label>
+        <input type="email" id="student-email" placeholder="e.g. ahmed@email.com" autocomplete="email">
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PART 1: GRAMMAR ===== -->
+  <div class="part-header">
+    <span class="part-badge">Part 1</span>
+    <span class="part-title">Grammar</span>
+    <div class="part-line"></div>
+    <span class="part-badge" style="background:#c9963a">Q1 – Q10</span>
+  </div>
+
+  <!-- Q1 -->
+  <div class="q-card" id="card-1">
+    <div class="q-number">QUESTION 01 &nbsp;·&nbsp; Multiple Choice</div>
+    <div class="q-text">Choose the correct sentence:</div>
+    <div class="options" data-q="1" data-answer="B">
+      <label class="option"><input type="radio" name="q1" value="A"><span class="option-dot"></span><span class="option-letter">A</span><span class="option-text">She has been working here since three years.</span></label>
+      <label class="option"><input type="radio" name="q1" value="B"><span class="option-dot"></span><span class="option-letter">B</span><span class="option-text">She has been working here for three years.</span></label>
+      <label class="option"><input type="radio" name="q1" value="C"><span class="option-dot"></span><span class="option-letter">C</span><span class="option-text">She is working here since three years.</span></label>
+      <label class="option"><input type="radio" name="q1" value="D"><span class="option-dot"></span><span class="option-letter">D</span><span class="option-text">She works here since three years.</span></label>
+    </div>
+    <div class="q-feedback" id="fb-1"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card" id="card-2">
+    <div class="q-number">QUESTION 02 &nbsp;·&nbsp; Multiple Choice</div>
+    <div class="q-text">Fill in the blank:</div>
+    <div class="q-sentence">"If I ________ the answer, I would tell you."</div>
+    <div class="options" data-q="2" data-answer="B">
+      <label class="option"><input type="radio" name="q2" value="A"><span class="option-dot"></span><span class="option-letter">A</span><span class="option-text">know</span></label>
+      <label class="option"><input type="radio" name="q2" value="B"><span class="option-dot"></span><span class="option-letter">B</span><span class="option-text">knew</span></label>
+      <label class="option"><input type="radio" name="q2" value="C"><span class="option-dot"></span><span class="option-letter">C</span><span class="option-text">had known</span></label>
+      <label class="option"><input type="radio" name="q2" value="D"><span class="option-dot"></span><span class="option-letter">D</span><span class="option-text">would know</span></label>
+    </div>
+    <div class="q-feedback" id="fb-2"></div>
+  </div>
+
+  <!-- Q3 OPEN -->
+  <div class="q-card" id="card-3">
+    <div class="q-number">QUESTION 03 &nbsp;·&nbsp; Written Answer</div>
+    <div class="q-text">Correct the mistake in this sentence:</div>
+    <div class="q-sentence">"The informations you gave me was very useful."</div>
+    <textarea class="q-textarea" id="open-3" placeholder="Write the corrected sentence here..." rows="2"></textarea>
+    <div class="textarea-note">This answer will not be auto-scored. Your teacher will review it.</div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-card" id="card-4">
+    <div class="q-number">QUESTION 04 &nbsp;·&nbsp; Multiple Choice</div>
+    <div class="q-text">Choose the correct option:</div>
+    <div class="q-sentence">"By the time she arrived, we ________ waiting for two hours."</div>
+    <div class="options" data-q="4" data-answer="A">
+      <label class="option"><input type="radio" name="q4" value="A"><span class="option-dot"></span><span class="option-letter">A</span><span class="option-text">had been</span></label>
+      <label class="option"><input type="radio" name="q4" value="B"><span class="option-dot"></span><span class="option-letter">B</span><span class="option-text">were</span></label>
+      <label class="option"><input type="radio" name="q4" value="C"><span class="option-dot"></span><span class="option-letter">C</span><span class="option-text">have been</span></label>
+      <label class="option"><input type="radio" name="q4" value="D"><span class="option-dot"></span><span class="option-letter">D</span><span class="option-text">are</span></label>
+    </div>
+    <div class="q-feedback" id="fb-4"></div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-card" id="card-5">
+    <div class="q-number">QUESTION 05 &nbsp;·&nbsp; Multiple Choice</div>
+    <div class="q-text">Fill in the blank with the correct preposition:</div>
+    <div class="q-sentence">"She's been working ________ this project since Monday."</div>
+    <div class="options" data-q="5" data-answer="C">
+      <label class="option"><input type="radio" name="q5" value="A"><span class="option-dot"></span><span class="option-letter">A</span><span class="option-text">for</span></label>
+      <label class="option"><input type="radio" name="q5" value="B"><span class="option-dot"></span><span class="option-letter">B</span><span class="option-text">at</span></label>
+      <label class="option"><input type="radio" name="q5" value="C"><span class="option-dot"></span><span class="option-letter">C</span><span class="option-text">on</span></label>
+      <label class="option"><input type="radio" name="q5" value="D"><span class="option-dot"></span><span class="option-letter">D</span><span class="option-text">about</span></label>
+    </div>
+    <div class="q-feedback" id="fb-5"></div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q-card" id="card-6">
+    <div class="q-number">QUESTION 06 &nbsp;·&nbsp; Multiple Choice</div>
+    <div class="q-text">Which sentence uses the passive voice correctly?</div>
+    <div class="options" data-q="6" data-answer="C">
+      <label class="option"><input type="radio" name="q6" value="A"><span class="option-dot"></span><span class="option-letter">A</span><span class="option-text">The report written by the manager.</span></label>
+      <label class="option"><input type="radio" name="q6" value="B"><span class="option-dot"></span><span class="option-letter">B</span><span class="option-text">The report was writing by the manager.</span></label>
+      <label class="option"><input type="radio" name="q6" value="C"><span class="option-dot"></span><span class="option-letter">C</span><span class="option-text">The report was written by the manager.</span></label>
+      <label class="option"><input type="radio" name="q6" value="D"><span class="option-dot"></span><span class="option-letter">D</span><span class="option-text">The report has write by the manager.</span></label>
+    </div>
+    <div class="q-feedback" id="fb-6"></div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="q-card" id="card-7">
+    <div class="q-number">QUESTION 07 &nbsp;·&nbsp; Multiple Choice</div>
+    <div class="q-text">Fill in the blank:</div>
+    <div class="q-sentence">"He suggested ________ the meeting until next week."</div>
+    <div class="options" data-q="7" data-answer="B">
+      <label class="option"><input type="radio" name="q7" value="A"><span class="option-dot"></span><span class="option-letter">A</span><span class="option-text">to postpone</span></label>
+      <label class="option"><input type="radio" name="q7" value="B"><span class="option-dot"></span><span class="option-letter">B</span><span class="option-text">postponing</span></label>
+      <label class="option"><input type="radio" name="q7" value="C"><span class="option-dot"></span><span class="option-letter">C</span><span class="option-text">postpone</span></label>
+      <label class="option"><input type="radio" name="q7" value="D"><span class="option-dot"></span><span class="option-letter">D</span><span class="option-text">to postponing</span></label>
+    </div>
+    <div class="q-feedback" id="fb-7"></div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="q-card" id="card-8">
+    <div class="q-number">QUESTION 08 &nbsp;·&nbsp; Multiple Choice</div>
+    <div class="q-text">Choose the correct sentence:</div>
+    <div class="options" data-q="8" data-answer="B">
+      <label class="option"><input type="radio" name="q8" value="A"><span class="option-dot"></span><span class="option-letter">A</span><span class="option-text">Despite of the rain, we went outside.</span></label>
+      <label class="option"><input type="radio" name="q8" value="B"><span class="option-dot"></span><span class="option-letter">B</span><span class="option-text">Despite the rain, we went outside.</span></label>
+      <label class="option"><input type="radio" name="q8" value="C"><span class="option-dot"></span><span class="option-letter">C</span><span class="option-text">Despite that it rained, we went outside.</span></label>
+      <label class="option"><input type="radio" name="q8" value="D"><span class="option-dot"></span><span class="option-letter">D</span><span class="option-text">Despite of raining, we went outside.</span></label>
+    </div>
+    <div class="q-feedback" id="fb-8"></div>
+  </div>
+
+  <!-- Q9 OPEN -->
+  <div class="q-card" id="card-9">
+    <div class="q-number">QUESTION 09 &nbsp;·&nbsp; Written Answer</div>
+    <div class="q-text">Rewrite using a relative clause. Combine these two sentences into one:</div>
+    <div class="q-sentence">"I spoke to a man. He works in the finance department."</div>
+    <textarea class="q-textarea" id="open-9" placeholder="Write your combined sentence here..." rows="2"></textarea>
+    <div class="textarea-note">This answer will not be auto-scored. Your teacher will review it.</div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="q-card" id="card-10">
+    <div class="q-number">QUESTION 10 &nbsp;·&nbsp; Multiple Choice</div>
+    <div class="q-text">Choose the correct option:</div>
+    <div class="q-sentence">"You ________ bring your passport. It's not required."</div>
+    <div class="options" data-q="10" data-answer="B">
+      <label class="option"><input type="radio" name="q10" value="A"><span class="option-dot"></span><span class="option-letter">A</span><span class="option-text">mustn't</span></label>
+      <label class="option"><input type="radio" name="q10" value="B"><span class="option-dot"></span><span class="option-letter">B</span><span class="option-text">don't have to</span></label>
+      <label class="option"><input type="radio" name="q10" value="C"><span class="option-dot"></span><span class="option-letter">C</span><span class="option-text">shouldn't</span></label>
+      <label class="option"><input type="radio" name="q10" value="D"><span class="option-dot"></span><span class="option-letter">D</span><span class="option-text">can't</span></label>
+    </div>
+    <div class="q-feedback" id="fb-10"></div>
+  </div>
+
+  <!-- ===== PART 2: VOCABULARY ===== -->
+  <div class="part-header">
+    <span class="part-badge">Part 2</span>
+    <span class="part-title">Vocabulary</span>
+    <div class="part-line"></div>
+    <span class="part-badge" style="background:#c9963a">Q11 – Q18</span>
+  </div>
+
+  <!-- Q11 -->
+  <div class="q-card" id="card-11">
+    <div class="q-number">QUESTION 11 &nbsp;·&nbsp; Multiple Choice</div>
+    <div class="q-text">Choose the word that best completes the sentence:</div>
+    <div class="q-sentence">"The manager asked us to ________ the deadline by two days."</div>
+    <div class="options" data-q="11" data-answer="A">
+      <label class="option"><input type="radio" name="q11" value="A"><span class="option-dot"></span><span class="option-letter">A</span><span class="option-text">extend</span></label>
+      <label class="option"><input type="radio" name="q11" value="B"><span class="option-dot"></span><span class="option-letter">B</span><span class="option-text">expand</span></label>
+      <label class="option"><input type="radio" name="q11" value="C"><span class="option-dot"></span><span class="option-letter">C</span><span class="option-text">increase</span></label>
+      <label class="option"><input type="radio" name="q11" value="D"><span class="option-dot"></span><span class="option-letter">D</span><span class="option-text">grow</span></label>
+    </div>
+    <div class="q-feedback" id="fb-11"></div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="q-card" id="card-12">
+    <div class="q-number">QUESTION 12 &nbsp;·&nbsp; Multiple Choice</div>
+    <div class="q-text">What does the phrasal verb "to put off" mean?</div>
+    <div class="options" data-q="12" data-answer="B">
+      <label class="option"><input type="radio" name="q12" value="A"><span class="option-dot"></span><span class="option-letter">A</span><span class="option-text">To cancel permanently</span></label>
+      <label class="option"><input type="radio" name="q12" value="B"><span class="option-dot"></span><span class="option-letter">B</span><span class="option-text">To postpone</span></label>
+      <label class="option"><input type="radio" name="q12" value="C"><span class="option-dot"></span><span class="option-letter">C</span><span class="option-text">To refuse</span></label>
+      <label class="option"><input type="radio" name="q12" value="D"><span class="option-dot"></span><span class="option-letter">D</span><span class="option-text">To finish quickly</span></label>
+    </div>
+    <div class="q-feedback" id="fb-12"></div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="q-card" id="card-13">
+    <div class="q-number">QUESTION 13 &nbsp;·&nbsp; Multiple Choice</div>
+    <div class="q-text">Choose the correct word:</div>
+    <div class="q-sentence">"The new policy had a significant ________ on employee productivity."</div>
+    <div class="options" data-q="13" data-answer="D">
+      <label class="option"><input type="radio" name="q13" value="A"><span class="option-dot"></span><span class="option-letter">A</span><span class="option-text">affect</span></label>
+      <label class="option"><input type="radio" name="q13" value="B"><span class="option-dot"></span><span class="option-letter">B</span><span class="option-text">effect</span></label>
+      <label class="option"><input type="radio" name="q13" value="C"><span class="option-dot"></span><span class="option-letter">C</span><span class="option-text">impact on</span></label>
+      <label class="option"><input type="radio" name="q13" value="D"><span class="option-dot"></span><span class="option-letter">D</span><span class="option-text">Both B and C are correct</span></label>
+    </div>
+    <div class="q-feedback" id="fb-13"></div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="q-card" id="card-14">
+    <div class="q-number">QUESTION 14 &nbsp;·&nbsp; Multiple Choice</div>
+    <div class="q-text">Which word does NOT collocate with "make"?</div>
+    <div class="options" data-q="14" data-answer="C">
+      <label class="option"><input type="radio" name="q14" value="A"><span class="option-dot"></span><span class="option-letter">A</span><span class="option-text">a decision</span></label>
+      <label class="option"><input type="radio" name="q14" value="B"><span class="option-dot"></span><span class="option-letter">B</span><span class="option-text">a mistake</span></label>
+      <label class="option"><input type="radio" name="q14" value="C"><span class="option-dot"></span><span class="option-letter">C</span><span class="option-text">a progress</span></label>
+      <label class="option"><input type="radio" name="q14" value="D"><span class="option-dot"></span><span class="option-letter">D</span><span class="option-text">a suggestion</span></label>
+    </div>
+    <div class="q-feedback" id="fb-14"></div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="q-card" id="card-15">
+    <div class="q-number">QUESTION 15 &nbsp;·&nbsp; Multiple Choice</div>
+    <div class="q-text">Fill in the blank with the correct word:</div>
+    <div class="q-sentence">"Could you please ________ me through the process step by step?"</div>
+    <div class="options" data-q="15" data-answer="D">
+      <label class="option"><input type="radio" name="q15" value="A"><span class="option-dot"></span><span class="option-letter">A</span><span class="option-text">walk</span></label>
+      <label class="option"><input type="radio" name="q15" value="B"><span class="option-dot"></span><span class="option-letter">B</span><span class="option-text">show</span></label>
+      <label class="option"><input type="radio" name="q15" value="C"><span class="option-dot"></span><span class="option-letter">C</span><span class="option-text">guide</span></label>
+      <label class="option"><input type="radio" name="q15" value="D"><span class="option-dot"></span><span class="option-letter">D</span><span class="option-text">Both A and C are correct</span></label>
+    </div>
+    <div class="q-feedback" id="fb-15"></div>
+  </div>
+
+  <!-- Q16 OPEN -->
+  <div class="q-card" id="card-16">
+    <div class="q-number">QUESTION 16 &nbsp;·&nbsp; Written Answer</div>
+    <div class="q-text">Which version is more appropriate in a business email, and why?</div>
+    <div class="q-sentence">A) "I want to tell you about a problem."<br>B) "I'd like to bring something to your attention."</div>
+    <textarea class="q-textarea" id="open-16" placeholder="Write your answer and explain your choice..." rows="3"></textarea>
+    <div class="textarea-note">This answer will not be auto-scored. Your teacher will review it.</div>
+  </div>
+
+  <!-- Q17 -->
+  <div class="q-card" id="card-17">
+    <div class="q-number">QUESTION 17 &nbsp;·&nbsp; Multiple Choice</div>
+    <div class="q-text">What is the meaning of the word "ambiguous"?</div>
+    <div class="options" data-q="17" data-answer="B">
+      <label class="option"><input type="radio" name="q17" value="A"><span class="option-dot"></span><span class="option-letter">A</span><span class="option-text">Very clear and easy to understand</span></label>
+      <label class="option"><input type="radio" name="q17" value="B"><span class="option-dot"></span><span class="option-letter">B</span><span class="option-text">Open to more than one interpretation</span></label>
+      <label class="option"><input type="radio" name="q17" value="C"><span class="option-dot"></span><span class="option-letter">C</span><span class="option-text">Impossible to understand</span></label>
+      <label class="option"><input type="radio" name="q17" value="D"><span class="option-dot"></span><span class="option-letter">D</span><span class="option-text">Completely wrong</span></label>
+    </div>
+    <div class="q-feedback" id="fb-17"></div>
+  </div>
+
+  <!-- Q18 -->
+  <div class="q-card" id="card-18">
+    <div class="q-number">QUESTION 18 &nbsp;·&nbsp; Multiple Choice</div>
+    <div class="q-text">Fill in the blank:</div>
+    <div class="q-sentence">"We need to ________ a solution before the client meeting tomorrow."</div>
+    <div class="options" data-q="18" data-answer="A">
+      <label class="option"><input type="radio" name="q18" value="A"><span class="option-dot"></span><span class="option-letter">A</span><span class="option-text">come up with</span></label>
+      <label class="option"><input type="radio" name="q18" value="B"><span class="option-dot"></span><span class="option-letter">B</span><span class="option-text">come up to</span></label>
+      <label class="option"><input type="radio" name="q18" value="C"><span class="option-dot"></span><span class="option-letter">C</span><span class="option-text">come with</span></label>
+      <label class="option"><input type="radio" name="q18" value="D"><span class="option-dot"></span><span class="option-letter">D</span><span class="option-text">bring up with</span></label>
+    </div>
+    <div class="q-feedback" id="fb-18"></div>
+  </div>
+
+  <!-- ===== PART 3: READING ===== -->
+  <div class="part-header">
+    <span class="part-badge">Part 3</span>
+    <span class="part-title">Reading Comprehension</span>
+    <div class="part-line"></div>
+    <span class="part-badge" style="background:#c9963a">Q19 – Q23</span>
+  </div>
+
+  <div class="passage-box">
+    <div class="passage-label">Read this passage carefully</div>
+    Remote work has transformed the way companies operate. While many employees appreciate the flexibility it offers, managers have raised concerns about maintaining team cohesion and productivity. A recent study found that workers who work remotely full-time report higher job satisfaction but lower feelings of connection with their colleagues. Companies are now experimenting with hybrid models, combining remote and office work, in an attempt to balance individual flexibility with collaborative team culture.
+  </div>
+
+  <!-- Q19 OPEN -->
+  <div class="q-card" id="card-19">
+    <div class="q-number">QUESTION 19 &nbsp;·&nbsp; Written Answer</div>
+    <div class="q-text">What is the main topic of the passage?</div>
+    <textarea class="q-textarea" id="open-19" placeholder="Write your answer here..." rows="2"></textarea>
+    <div class="textarea-note">This answer will not be auto-scored. Your teacher will review it.</div>
+  </div>
+
+  <!-- Q20 OPEN -->
+  <div class="q-card" id="card-20">
+    <div class="q-number">QUESTION 20 &nbsp;·&nbsp; Written Answer</div>
+    <div class="q-text">According to the passage, what is one concern managers have about remote work?</div>
+    <textarea class="q-textarea" id="open-20" placeholder="Write your answer here..." rows="2"></textarea>
+    <div class="textarea-note">This answer will not be auto-scored. Your teacher will review it.</div>
+  </div>
+
+  <!-- Q21 -->
+  <div class="q-card" id="card-21">
+    <div class="q-number">QUESTION 21 &nbsp;·&nbsp; Multiple Choice</div>
+    <div class="q-text">What does the word "cohesion" most likely mean in this context?</div>
+    <div class="options" data-q="21" data-answer="C">
+      <label class="option"><input type="radio" name="q21" value="A"><span class="option-dot"></span><span class="option-letter">A</span><span class="option-text">Competition between team members</span></label>
+      <label class="option"><input type="radio" name="q21" value="B"><span class="option-dot"></span><span class="option-letter">B</span><span class="option-text">The ability to work independently</span></label>
+      <label class="option"><input type="radio" name="q21" value="C"><span class="option-dot"></span><span class="option-letter">C</span><span class="option-text">The sense of unity and connection within a group</span></label>
+      <label class="option"><input type="radio" name="q21" value="D"><span class="option-dot"></span><span class="option-letter">D</span><span class="option-text">The speed at which work is completed</span></label>
+    </div>
+    <div class="q-feedback" id="fb-21"></div>
+  </div>
+
+  <!-- Q22 OPEN -->
+  <div class="q-card" id="card-22">
+    <div class="q-number">QUESTION 22 &nbsp;·&nbsp; Written Answer</div>
+    <div class="q-text">What solution are companies trying, according to the passage?</div>
+    <textarea class="q-textarea" id="open-22" placeholder="Write your answer here..." rows="2"></textarea>
+    <div class="textarea-note">This answer will not be auto-scored. Your teacher will review it.</div>
+  </div>
+
+  <!-- Q23 OPEN -->
+  <div class="q-card" id="card-23">
+    <div class="q-number">QUESTION 23 &nbsp;·&nbsp; Written Answer (True / False)</div>
+    <div class="q-text">True or False? Explain your answer.</div>
+    <div class="q-sentence">"Fully remote workers in the study felt more connected to colleagues than office workers."</div>
+    <textarea class="q-textarea" id="open-23" placeholder="True or False — and explain why..." rows="3"></textarea>
+    <div class="textarea-note">This answer will not be auto-scored. Your teacher will review it.</div>
+  </div>
+
+  <!-- ===== PART 4: WRITING ===== -->
+  <div class="part-header">
+    <span class="part-badge">Part 4</span>
+    <span class="part-title">Writing &amp; Natural English</span>
+    <div class="part-line"></div>
+    <span class="part-badge" style="background:#c9963a">Q24 – Q30</span>
+  </div>
+
+  <!-- Q24 OPEN -->
+  <div class="q-card" id="card-24">
+    <div class="q-number">QUESTION 24 &nbsp;·&nbsp; Written Answer</div>
+    <div class="q-text">Rewrite this sentence so it sounds more natural in English:</div>
+    <div class="q-sentence">"I am writing this email for the purpose of requesting information about your products."</div>
+    <textarea class="q-textarea" id="open-24" placeholder="Write a more natural version here..." rows="2"></textarea>
+    <div class="textarea-note">This answer will not be auto-scored. Your teacher will review it.</div>
+  </div>
+
+  <!-- Q25 OPEN -->
+  <div class="q-card" id="card-25">
+    <div class="q-number">QUESTION 25 &nbsp;·&nbsp; Written Answer</div>
+    <div class="q-text">Find and correct ALL mistakes in this paragraph:</div>
+    <div class="q-sentence">"Yesterday I have went to a meeting with the client. They was not happy about the delay. I tried to explained the situation but they didn't wanted to listen."</div>
+    <textarea class="q-textarea" id="open-25" placeholder="Write the fully corrected paragraph here..." rows="4"></textarea>
+    <div class="textarea-note">This answer will not be auto-scored. Your teacher will review it.</div>
+  </div>
+
+  <!-- Q26 OPEN -->
+  <div class="q-card" id="card-26">
+    <div class="q-number">QUESTION 26 &nbsp;·&nbsp; Written Answer</div>
+    <div class="q-text">Write 2-3 sentences responding to this situation:</div>
+    <div class="q-sentence">Your colleague suggests holding a team meeting every day. You think once a week is enough. Disagree politely and give a reason.</div>
+    <textarea class="q-textarea" id="open-26" placeholder="Write your polite disagreement here..." rows="3"></textarea>
+    <div class="textarea-note">This answer will not be auto-scored. Your teacher will review it.</div>
+  </div>
+
+  <!-- Q27 -->
+  <div class="q-card" id="card-27">
+    <div class="q-number">QUESTION 27 &nbsp;·&nbsp; Multiple Choice</div>
+    <div class="q-text">Which sentence sounds more natural in everyday English?</div>
+    <div class="options" data-q="27" data-answer="B">
+      <label class="option"><input type="radio" name="q27" value="A"><span class="option-dot"></span><span class="option-letter">A</span><span class="option-text">"I am in agreement with your proposition."</span></label>
+      <label class="option"><input type="radio" name="q27" value="B"><span class="option-dot"></span><span class="option-letter">B</span><span class="option-text">"I agree with your suggestion."</span></label>
+    </div>
+    <div class="q-feedback" id="fb-27"></div>
+  </div>
+
+  <!-- Q27b OPEN -->
+  <div class="q-card" id="card-27b">
+    <div class="q-number">QUESTION 27b &nbsp;·&nbsp; Written Answer</div>
+    <div class="q-text">Now write a sentence where you disagree politely with something, using natural English:</div>
+    <textarea class="q-textarea" id="open-27b" placeholder="Write your polite disagreement sentence here..." rows="2"></textarea>
+    <div class="textarea-note">This answer will not be auto-scored. Your teacher will review it.</div>
+  </div>
+
+  <!-- Q28 OPEN -->
+  <div class="q-card" id="card-28">
+    <div class="q-number">QUESTION 28 &nbsp;·&nbsp; Written Answer</div>
+    <div class="q-text">What is the difference between these two sentences? Explain briefly:</div>
+    <div class="q-sentence">A) "I work here for five years."<br>B) "I have been working here for five years."</div>
+    <textarea class="q-textarea" id="open-28" placeholder="Explain the grammatical difference..." rows="3"></textarea>
+    <div class="textarea-note">This answer will not be auto-scored. Your teacher will review it.</div>
+  </div>
+
+  <!-- Q29 OPEN -->
+  <div class="q-card" id="card-29">
+    <div class="q-number">QUESTION 29 &nbsp;·&nbsp; Written Answer</div>
+    <div class="q-text">Write a short professional email (4-6 sentences):</div>
+    <div class="q-sentence">Inform a colleague that a meeting scheduled for tomorrow has been moved to next Tuesday at 3 PM. Apologize for the short notice.</div>
+    <textarea class="q-textarea" id="open-29" placeholder="Write your professional email here..." rows="6"></textarea>
+    <div class="textarea-note">This answer will not be auto-scored. Your teacher will review it.</div>
+  </div>
+
+  <!-- Q30 OPEN -->
+  <div class="q-card" id="card-30">
+    <div class="q-number">QUESTION 30 &nbsp;·&nbsp; Open Question</div>
+    <div class="q-text">Answer in 3-5 sentences:</div>
+    <div class="q-sentence">What is one thing you find most difficult about English, and why?</div>
+    <textarea class="q-textarea" id="open-30" placeholder="Write your answer here in English..." rows="5"></textarea>
+    <div class="textarea-note">This answer will not be auto-scored. Your teacher will review it.</div>
+  </div>
+
+  <!-- SUBMIT -->
+  <div class="submit-wrap">
+    <button class="btn-submit" id="btn-submit" onclick="submitExam()">Submit &amp; See My Score</button>
+    <div class="submit-status" id="submit-status"></div>
+  </div>
+
+</div><!-- /exam-body -->
+
+<!-- SCORE PANEL -->
+<div id="score-panel">
+  <div class="score-card">
+    <div class="score-eyebrow" id="score-eyebrow-name">Your Result</div>
+    <div>
+      <span class="score-big" id="score-num">0</span>
+      <span class="score-denom" id="score-denom">/ 22</span>
+    </div>
+    <div class="score-pct-label" id="score-pct-label">0% on multiple choice questions</div>
+    <div class="cefr-badge" id="cefr-badge">Calculating...</div>
+  </div>
+
+  <div class="breakdown-grid" id="breakdown-grid"></div>
+
+  <div class="open-notice">
+    <strong>Written answers are not auto-scored</strong>
+    Copy your written answers (Q3, Q9, Q16, Q19, Q20, Q22, Q23, Q24, Q25, Q26, Q27b, Q28, Q29, Q30) and paste them to your English tutor for full feedback and a complete assessment.
+  </div>
+
+  <div class="insights-card" id="insights-card"></div>
+
+  <div style="text-align:center; margin-top: 20px;">
+    <button class="btn-retry" onclick="location.reload()">Retake the Exam</button>
+  </div>
+</div>
+
+<script>
+  // ── ANSWER KEY (MC only) ──
+  const answers = { 1:'B', 2:'B', 4:'A', 5:'C', 6:'C', 7:'B', 8:'B',
+                    10:'B', 11:'A', 12:'B', 13:'D', 14:'C', 15:'D',
+                    17:'B', 18:'A', 21:'C', 27:'B' };
+
+  const parts = {
+    'Grammar':    [1,2,4,5,6,7,8,10],
+    'Vocabulary': [11,12,13,14,15,17,18],
+    'Reading':    [21],
+    'Writing':    [27]
+  };
+
+  const explanations = {
+    1:  'Use "for" with a period of time (three years), and "since" with a point in time (Monday, 2020).',
+    2:  'Second conditional: "If + past simple, would + base verb." We use "knew" not "know".',
+    4:  'Past Perfect Continuous (had been + -ing) describes an action in progress before a past moment.',
+    5:  '"Work on a project" is the correct collocation. "On" shows the focus of your work.',
+    6:  'Passive voice = subject + was/were + past participle. "Written" is the past participle of "write".',
+    7:  '"Suggest" is followed by a gerund (-ing). "Suggested postponing" is correct.',
+    8:  '"Despite" is followed directly by a noun or noun phrase — no "of" needed.',
+    10: '"Mustn\'t" means it is forbidden. "Don\'t have to" means it is not necessary — correct here.',
+    11: 'We "extend" a deadline (make it longer). "Expand", "increase", and "grow" do not collocate with deadline.',
+    12: '"Put off" means to postpone or delay something.',
+    13: 'Both "effect on" (noun) and "impact on" (noun) are correct. "Affect" is a verb, not a noun.',
+    14: 'We say "make progress" (no article). "A progress" is incorrect — progress is uncountable.',
+    15: '"Walk someone through" and "guide someone through" both mean to explain step by step. "Show" does not use "through" in this way.',
+    17: '"Ambiguous" means something that can be understood in more than one way.',
+    18: '"Come up with" means to think of or produce an idea or solution.',
+    21: 'Context clue: concerns about team connection suggest cohesion means unity within a group.',
+    27: 'Option B is natural and conversational. Option A is overly formal and sounds stiff in most contexts.'
+  };
+
+  const mcQuestions = Object.keys(answers).map(Number);
+  const totalMC = mcQuestions.length;
+
+  // ── PROGRESS TRACKING ──
+  let answered = new Set();
+
+  function updateProgress() {
+    const n = answered.size;
+    const pct = Math.round((n / totalMC) * 100);
+    document.getElementById('progress-label').textContent = `${n} of ${totalMC} answered`;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-pct').textContent = pct + '%';
+  }
+
+  // ── OPTION CLICK ──
+  document.querySelectorAll('.options').forEach(group => {
+    group.querySelectorAll('.option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        const qNum = +group.dataset.q;
+        group.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        opt.querySelector('input').checked = true;
+        answered.add(qNum);
+        document.getElementById('card-' + qNum).classList.add('answered');
+        updateProgress();
+      });
+    });
+  });
+
+  // ── SUBMIT ──
+  function submitExam() {
+    let correct = 0;
+    const partScores = {};
+    Object.keys(parts).forEach(p => partScores[p] = { correct: 0, total: parts[p].length });
+
+    mcQuestions.forEach(qNum => {
+      const group = document.querySelector(`.options[data-q="${qNum}"]`);
+      const correctAns = answers[qNum];
+      const selected = group.querySelector('input:checked');
+      const card = document.getElementById('card-' + qNum);
+      const fb = document.getElementById('fb-' + qNum);
+
+      group.querySelectorAll('.option').forEach(opt => {
+        const val = opt.querySelector('input').value;
+        if (val === correctAns) opt.classList.add('correct-answer');
+      });
+
+      if (selected) {
+        const userAns = selected.value;
+        if (userAns === correctAns) {
+          correct++;
+          card.classList.remove('answered'); card.classList.add('correct');
+          selected.closest('.option').classList.remove('selected');
+          fb.textContent = '✓ Correct! ' + (explanations[qNum] || '');
+          fb.className = 'q-feedback show ok';
+          // update part score
+          for (const [part, qs] of Object.entries(parts)) {
+            if (qs.includes(qNum)) partScores[part].correct++;
+          }
+        } else {
+          card.classList.remove('answered'); card.classList.add('wrong');
+          selected.closest('.option').classList.add('wrong-answer');
+          fb.textContent = '✗ Incorrect. ' + (explanations[qNum] || '');
+          fb.className = 'q-feedback show bad';
+        }
+      } else {
+        card.classList.remove('answered'); card.classList.add('wrong');
+        fb.textContent = '✗ Not answered. ' + (explanations[qNum] || '');
+        fb.className = 'q-feedback show bad';
+      }
+    });
+
+    // disable options
+    document.querySelectorAll('.option').forEach(o => o.style.pointerEvents = 'none');
+    document.getElementById('btn-submit').disabled = true;
+
+    // show score panel
+    const pct = Math.round((correct / totalMC) * 100);
+    document.getElementById('score-num').textContent = correct;
+    document.getElementById('score-denom').textContent = '/ ' + totalMC;
+    document.getElementById('score-pct-label').textContent = pct + '% on multiple choice questions';
+
+    // CEFR estimate
+    let cefr, cefrDesc;
+    if (pct >= 90)      { cefr = 'C1 — Advanced';            cefrDesc = 'Excellent command. Aim for C2 next.'; }
+    else if (pct >= 77) { cefr = 'B2 — Upper-Intermediate';  cefrDesc = 'Strong performance. Keep building on it.'; }
+    else if (pct >= 60) { cefr = 'B1 — Intermediate';        cefrDesc = 'Good foundation. Focus on your weak areas.'; }
+    else if (pct >= 40) { cefr = 'A2 — Elementary';          cefrDesc = 'Some basics in place. Consistent practice needed.'; }
+    else                { cefr = 'A1 — Beginner';             cefrDesc = 'Start with the fundamentals.'; }
+    document.getElementById('cefr-badge').textContent = cefr;
+
+    // breakdown
+    const grid = document.getElementById('breakdown-grid');
+    grid.innerHTML = '';
+    for (const [part, sc] of Object.entries(partScores)) {
+      const p = sc.total > 0 ? Math.round((sc.correct / sc.total) * 100) : 0;
+      grid.innerHTML += `
+        <div class="breakdown-card">
+          <div class="breakdown-label">${part}</div>
+          <div class="breakdown-bar-track"><div class="breakdown-bar-fill" style="width:${p}%"></div></div>
+          <div class="breakdown-pct">${p}% <span style="font-size:13px;color:#888;font-family:Inter,sans-serif">(${sc.correct}/${sc.total})</span></div>
+        </div>`;
+    }
+
+    // insights
+    const weakParts = Object.entries(partScores).filter(([,sc]) => sc.total > 0 && (sc.correct/sc.total) < 0.6).map(([p]) => p);
+    const strongParts = Object.entries(partScores).filter(([,sc]) => sc.total > 0 && (sc.correct/sc.total) >= 0.8).map(([p]) => p);
+    let insightsHTML = `<div class="insights-title">What your score tells you</div>`;
+    insightsHTML += `<div class="insight-row"><span class="insight-icon">📊</span><span>${cefrDesc}</span></div>`;
+    if (strongParts.length) insightsHTML += `<div class="insight-row"><span class="insight-icon">💪</span><span><strong>Strengths:</strong> ${strongParts.join(', ')}</span></div>`;
+    if (weakParts.length)   insightsHTML += `<div class="insight-row"><span class="insight-icon">🎯</span><span><strong>Priority areas:</strong> ${weakParts.join(', ')} — focus your study here.</span></div>`;
+    insightsHTML += `<div class="insight-row"><span class="insight-icon">✍️</span><span>Your <strong>written answers</strong> (Q3, Q9, Q16, Q19–Q20, Q22–Q30) contain additional evidence of your real level. Share them with your tutor for a complete picture.</span></div>`;
+    document.getElementById('insights-card').innerHTML = insightsHTML;
+
+    // ── COLLECT STUDENT INFO ──
+    const studentName  = (document.getElementById('student-name').value  || 'Anonymous').trim();
+    const studentEmail = (document.getElementById('student-email').value || '').trim();
+
+    // ── COLLECT ALL WRITTEN ANSWERS ──
+    const openIds = ['3','9','16','19','20','22','23','24','25','26','27b','28','29','30'];
+    const openLabels = {
+      '3':'Q3 - Correct the sentence','9':'Q9 - Relative clause','16':'Q16 - Business email choice',
+      '19':'Q19 - Main topic','20':'Q20 - Manager concerns','22':'Q22 - Company solution',
+      '23':'Q23 - True/False + explanation','24':'Q24 - Rewrite naturally',
+      '25':'Q25 - Paragraph correction','26':'Q26 - Polite disagreement',
+      '27b':'Q27b - Disagree sentence','28':'Q28 - Grammar difference',
+      '29':'Q29 - Professional email','30':'Q30 - Open answer'
+    };
+
+    // ── BUILD MC SUMMARY ──
+    const mcSummaryLines = mcQuestions.map(qNum => {
+      const group    = document.querySelector(`.options[data-q="${qNum}"]`);
+      const selected = group.querySelector('input:checked');
+      const userAns  = selected ? selected.value : 'No answer';
+      const correct  = userAns === answers[qNum];
+      return `Q${qNum}: ${userAns} (${correct ? 'CORRECT' : 'WRONG — correct: ' + answers[qNum]})`;
+    }).join('\n');
+
+    // ── BUILD WRITTEN SUMMARY ──
+    const writtenLines = openIds.map(id => {
+      const val = (document.getElementById('open-' + id)?.value || '').trim();
+      return `${openLabels[id]}:\n${val || '[No answer]'}`;
+    }).join('\n\n');
+
+    // ── SEND TO FORMSPREE ──
+    const FORMSPREE_URL = 'https://formspree.io/f/xqpzkpzw';
+
+    const statusEl = document.getElementById('submit-status');
+    statusEl.textContent = 'Sending results...';
+    statusEl.className = 'submit-status sending';
+
+    const payload = {
+      _subject:        `English Exam — ${studentName} — Score: ${correct}/${totalMC} (${pct}%)`,
+      student_name:    studentName,
+      student_email:   studentEmail,
+      score:           `${correct} / ${totalMC}  (${pct}%)`,
+      cefr_estimate:   cefr,
+      mc_answers:      mcSummaryLines,
+      written_answers: writtenLines,
+    };
+
+    fetch(FORMSPREE_URL, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body:    JSON.stringify(payload),
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.ok) {
+        statusEl.textContent = '✓ Results sent successfully to your tutor.';
+        statusEl.className = 'submit-status sent';
+      } else {
+        statusEl.textContent = 'Could not send results — please copy your answers manually.';
+        statusEl.className = 'submit-status error';
+      }
+    })
+    .catch(() => {
+      statusEl.textContent = 'Network error — please copy your answers manually or check your Formspree URL.';
+      statusEl.className = 'submit-status error';
+    });
+
+    // ── ADD NAME TO SCORE PANEL ──
+    document.getElementById('score-eyebrow-name').textContent =
+      studentName !== 'Anonymous' ? `Results for ${studentName}` : 'Your Result';
+
+    // show panel & scroll
+    document.getElementById('score-panel').style.display = 'block';
+    setTimeout(() => document.getElementById('score-panel').scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
+  }
+</script>
+</body>
+</html>
